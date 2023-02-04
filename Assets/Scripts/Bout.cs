@@ -7,9 +7,12 @@ using UnityEngine.InputSystem;
 
 public class Bout : MonoBehaviour
 {
+
+    GameObject[] waterPOints;
     private Transform target;
+    
     /*0 is straight down*/
-    private float angleRotation  = 1; /*CHANGER EN PRIVATE*/
+    private float angleRotation  = 1; 
     private float speed = 0;
     
     private LineRenderer lineRenderer;    
@@ -66,7 +69,8 @@ public class Bout : MonoBehaviour
             lineRenderer.SetPosition(points.Count -1,target.position);
         }
 
-        lifeTime += Time.deltaTime;        
+        if (isMoving)
+            lifeTime += Time.deltaTime;        
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -76,10 +80,17 @@ public class Bout : MonoBehaviour
             die();
         }
 
-         if(other.tag == "Root" && lifeTime > ignoreCollisionTime)
+        if(other.tag == "Root" && lifeTime > ignoreCollisionTime)
         {
             die();
         }
+
+        if(other.tag == "Eau")
+        {
+            GameManager.instance.reachWater();
+            die();
+        }
+        
     }
 
     
@@ -88,22 +99,23 @@ public class Bout : MonoBehaviour
     {
         if (collision.tag == "Root" && lifeTime > ignoreCollisionTime)
         {
-           die();
+            Debug.Log("Mort sur racine  STAY timer " + lifeTime);
+
+            die();
         }
     }
 
 
     public void die()
     {
-        GameManager.instance.launchBout();
+        GameManager.instance.onDeathBout(points);
         target.DOMove(new Vector2(target.position.x, target.position.y), 1);
         Destroy(this);
     }
 
     public void startToMove()
     {
-        this.isMoving = true;
-        
+        this.isMoving = true;        
     }
 
 }
