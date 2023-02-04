@@ -5,7 +5,7 @@ using UnityEngine;
 public class Racine : MonoBehaviour
 {
 
-    EdgeCollider2D collider;
+    EdgeCollider2D edgeCollider;
       
     // Start is called before the first frame update
     void Start()
@@ -20,8 +20,8 @@ public class Racine : MonoBehaviour
 
     public void createCollider(List<Vector2> points)
     {
-        collider = GetComponent<EdgeCollider2D>();
-        collider.points = points.ToArray();
+        edgeCollider = GetComponent<EdgeCollider2D>();
+        edgeCollider.points = points.ToArray();
     }
 
   
