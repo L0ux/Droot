@@ -15,7 +15,7 @@ public class Bout : MonoBehaviour
     private Transform target;
     
     /*0 is straight down*/
-    private float angleRotation  = 0; 
+    public float angleRotation  = 0; 
     private float speed = 0;
     
     private LineRenderer lineRenderer;
@@ -26,7 +26,7 @@ public class Bout : MonoBehaviour
     private float pointSpacing = 0.05f;
     public const float ignoreCollisionTime = 0.5f;
     private float lifeTime = .0f;
-
+    private List<float> precAngle;
 
     /*GestionBourgeons*/
     private Vector2 positionLastBourgon ;
@@ -40,6 +40,8 @@ public class Bout : MonoBehaviour
         positionLastBourgon = this.transform.position;
         lineRenderer.SetPosition(0, target.position);
         points.Add(target.position);
+        
+        precAngle = new List<float> ();
     }
 
     // Update is called once per frame
@@ -48,16 +50,39 @@ public class Bout : MonoBehaviour
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         Vector2 distanceToMouse = mousePosition - (Vector2) target.position;
 
+
+        /*****ANGLE****/
+        float angle = Vector2.SignedAngle(Vector2.down, distanceToMouse);
+
+        /*REMAP angle */
+        float max = 89;
+        float min = -88;
+
+        angle = Mathf.Min(angle, max);
+        angle = Mathf.Max(angle, min);
+
         /*****SPEED******/
-       
         /*Si on bouge ET souris sous la racine*/
-        if (this.isMoving && target.position.y > mousePosition.y)
-            this.speed = (target.position.y - mousePosition.y) / 4;
+        if (this.isMoving)
+            this.speed = Vector2.Distance(target.position, mousePosition) / 4;
         else
             speed = 0f;
 
-        /*****ANGLE****/
-        this.angleRotation = Vector2.SignedAngle(Vector2.down, distanceToMouse);
+
+        
+        /*A REFACTO */
+        bool angleTooMUCH = angle > 80 || angle < -80;
+        bool mouseAboveBout = (mousePosition.y >target.position.y);
+
+        if (mouseAboveBout)
+            speed = speed / 2;
+        if(angleTooMUCH)
+            speed = speed / 2;        
+
+
+
+        this.angleRotation = angle;
+
         /*AddNoise � l'angle a refaire 
          * A REFAIRE pour plus consistant*/
         this.angleRotation += UnityEngine.Random.Range(-60, 60);

@@ -14,7 +14,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Racine racinePrefab;
     [SerializeField] private GameObject bourgeonPrefab;
     [SerializeField] private GameObject bourgeonContainer;
-    
+
+    [SerializeField] private float sizeCameraOnZoom;
+    [SerializeField] private float sizeCameraOnDezoom;
+
+    [SerializeField] private GameObject startPoint;
+
     private List<GameObject> bourgeons;
 
     [SerializeField] private CinemachineVirtualCamera myCamera;
@@ -28,14 +33,13 @@ public class GameManager : MonoBehaviour
             Destroy(this);
     }
 
-
-
-
     public void Start()
     {
-        createNewBout(Vector2.zero) ; 
-        /*A refacto*/
         bourgeons = new List<GameObject>();
+        myCamera.m_Lens.OrthographicSize = sizeCameraOnDezoom;
+
+        createBourgeon(startPoint.transform.position);
+
     }
 
     public void onDeathBout(List<Vector2> points = null)
@@ -43,27 +47,26 @@ public class GameManager : MonoBehaviour
         currentBout = null;
         createRacine(points);
         /*Dezoom*/
-
+        myCamera.m_Lens.OrthographicSize = sizeCameraOnDezoom;
         
 
     }
 
     private void createNewBout(Vector2 position)
     {
-        Debug.Log("Create new bout " + position);
         if (currentBout != null)
             return;
+        myCamera.m_Lens.OrthographicSize = sizeCameraOnZoom;
+
         currentBout = Instantiate(boutPrefab, position, Quaternion.identity);
         myCamera.Follow = currentBout.transform;
     }
     
     private void OnClick()
     {
-        Debug.Log("OnCLICK ");
         if (currentBout == null)
         {
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            Debug.Log("" + bourgeonContainer.GetComponentsInChildren<Transform>().Count());
             Transform closestBourgeon =  bourgeonContainer.GetComponentsInChildren<Transform>().OrderBy(trsf => Vector2.Distance(trsf.position,mousePosition) ).First();
             createNewBout(closestBourgeon.position);
         }
