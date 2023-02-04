@@ -42,7 +42,9 @@ public class GameManager : MonoBehaviour
     {
         currentBout = null;
         createRacine(points);
-        /*Dezoom restart */
+        /*Dezoom*/
+
+        
 
     }
 
