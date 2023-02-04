@@ -8,11 +8,11 @@ using UnityEngine.InputSystem;
 public class Bout : MonoBehaviour
 {
     private Transform target;
-    private float direction = 1;
-    private LineRenderer lineRenderer;    
+/*    private int direction = 1;
+*/    private LineRenderer lineRenderer;    
     private List<Vector2> points;
     private float pointSpacing = 0.1f;
-
+    private bool move = false ;
 
 
     private void Start()
@@ -26,20 +26,18 @@ public class Bout : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        Vector2 destination = (Vector2)target.position + (mousePosition -(Vector2)target.position )/10 ;
-        //Debug.Log("target "+target.position);
-
+        Vector2 destination =  (Vector2)target.position + ((mousePosition -(Vector2)target.position )/10) ;
 
         /*if(mousePosition.y > target.position.y){
             target.DOMove(target.position,1);
         }else{
             target.DOMove(new Vector2(destination.x,mousePosition.y),1);
         }*/
+        if (!this.move)
+            return;
 
-
-        target.DOMove(new Vector2(destination.x,mousePosition.y),1);
+       target.DOMove(new Vector2(destination.x,mousePosition.y),1);
         
     
 
@@ -52,10 +50,19 @@ public class Bout : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter2D(Collider2D other) {
-        Debug.Log(other);
-        if(other.tag == "Obstacle"){
-            this.direction = 0;
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "Obstacle")
+        {
+            GameManager.instance.launchBout();
+            target.DOMove(new Vector2(target.position.x, target.position.y), 1);
+            Destroy(this);
         }
     }
+
+    public void startToMove()
+    {
+        this.move = true;
+    }
+
 }
