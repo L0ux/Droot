@@ -4,6 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using System.Linq;
 using UnityEngine.InputSystem;
+using System;
 
 public class Bout : MonoBehaviour
 {
@@ -12,10 +13,10 @@ public class Bout : MonoBehaviour
     private Transform target;
     
     /*0 is straight down*/
-    private float angleRotation  = 1; 
+    private float angleRotation  = 0; 
     private float speed = 0;
     
-    private LineRenderer lineRenderer;    
+    private LineRenderer lineRenderer;
     private List<Vector2> points;
 
     private bool isMoving = false ;
@@ -24,11 +25,18 @@ public class Bout : MonoBehaviour
     public const float ignoreCollisionTime = 0.5f;
     private float lifeTime = .0f;
 
+
+    /*GestionBourgeons*/
+    private Vector2 positionLastBourgon ;
+    public const int BourgonEveryNbUnit = 3;
+
     private void Start()
     {
         target = GetComponent<Transform>();
         lineRenderer = GetComponent<LineRenderer>(); 
         this.points = new List<Vector2>();
+        positionLastBourgon = this.transform.position;
+        lineRenderer.SetPosition(0, target.position);
         points.Add(target.position);
     }
 
@@ -50,13 +58,14 @@ public class Bout : MonoBehaviour
         this.angleRotation = Vector2.SignedAngle(Vector2.down, distanceToMouse);
         /*AddNoise � l'angle a refaire 
          * A REFAIRE pour plus consistant*/
-        this.angleRotation += Random.Range(-60, 60);
+        this.angleRotation += UnityEngine.Random.Range(-60, 60);
 
 
         /****** MOVE *******/
         Vector2 move = Quaternion.AngleAxis(angleRotation, new Vector3(0, 0, 1)) * Vector2.down * speed;
         Vector2 destination = (Vector2)target.position + move ;        
         
+
         target.DOMove(destination,1);
 
 
@@ -64,12 +73,19 @@ public class Bout : MonoBehaviour
     
         /****DRAW LINE*******/
         if( Vector2.Distance(target.position,points.Last()) > pointSpacing){
-            points.Add(target.position);        
+            points.Add(target.position);
             lineRenderer.positionCount = points.Count();
             lineRenderer.SetPosition(points.Count -1,target.position);
         }
 
-        if (isMoving)
+        if(Math.Abs(target.position.y- positionLastBourgon.y) > BourgonEveryNbUnit)
+        {
+            GameManager.instance.createBourgeon(target.position);
+            positionLastBourgon = target.position;
+        }
+
+
+        if (isMoving && speed > 0f)
             lifeTime += Time.deltaTime;        
     }
 
@@ -99,8 +115,6 @@ public class Bout : MonoBehaviour
     {
         if (collision.tag == "Root" && lifeTime > ignoreCollisionTime)
         {
-            Debug.Log("Mort sur racine  STAY timer " + lifeTime);
-
             die();
         }
     }
