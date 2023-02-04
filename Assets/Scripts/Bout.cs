@@ -8,6 +8,8 @@ using UnityEngine.InputSystem;
 public class Bout : MonoBehaviour
 {
 
+    public GameObject mask;
+
     GameObject[] waterPOints;
     private Transform target;
     
@@ -109,6 +111,7 @@ public class Bout : MonoBehaviour
     public void die()
     {
         GameManager.instance.onDeathBout(points);
+        mask.SetActive(true);
         target.DOMove(new Vector2(target.position.x, target.position.y), 1);
         Destroy(this);
     }
