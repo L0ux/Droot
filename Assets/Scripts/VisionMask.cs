@@ -10,7 +10,7 @@ public class VisionMask : MonoBehaviour
     private void OnEnable()
     {
         transform = GetComponent<Transform>();
-        Vector3 desiredScale = new Vector3(20, 10, 0);
+        Vector3 desiredScale = new Vector3(30, 15, 0);
         transform.DOScale(desiredScale, 2);
     }
 }
