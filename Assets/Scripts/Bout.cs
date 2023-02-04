@@ -14,7 +14,7 @@ public class Bout : MonoBehaviour
     
     private LineRenderer lineRenderer;    
     private List<Vector2> points;
-    private float pointSpacing = 0.1f;
+
     private bool isMoving = false ;
 
     private float pointSpacing = 0.05f;
