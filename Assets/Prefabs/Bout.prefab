@@ -15,8 +15,8 @@ GameObject:
   - component: {fileID: 5438355102351489940}
   - component: {fileID: 5438355102351489941}
   m_Layer: 0
-  m_Name: Root
-  m_TagString: Untagged
+  m_Name: Bout
+  m_TagString: Root
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -100,6 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91337162a5b1b42749b6f9ad2f668262, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Racine: {fileID: 8575215616215597132, guid: 64eb012ecccd74f38bebd8e6d3fd588c, type: 3}
 --- !u!61 &5438355102351489943
 BoxCollider2D:
   m_ObjectHideFlags: 0

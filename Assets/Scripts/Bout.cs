@@ -9,7 +9,7 @@ public class Bout : MonoBehaviour
 {
     private Transform target;
     /*0 is straight down*/
-    public float angleRotation  = 1; /*CHANGER EN PRIVATE*/
+    private float angleRotation  = 1; /*CHANGER EN PRIVATE*/
     private float speed = 0;
     
     private LineRenderer lineRenderer;    
@@ -17,13 +17,16 @@ public class Bout : MonoBehaviour
     private float pointSpacing = 0.1f;
     private bool isMoving = false ;
 
+    private float pointSpacing = 0.05f;
+    public const float ignoreCollisionTime = 0.5f;
+    private float lifeTime = .0f;
 
     private void Start()
     {
         target = GetComponent<Transform>();
         lineRenderer = GetComponent<LineRenderer>(); 
         this.points = new List<Vector2>();
-        points.Add(target.position);      
+        points.Add(target.position);
     }
 
     // Update is called once per frame
@@ -42,7 +45,7 @@ public class Bout : MonoBehaviour
 
         /*****ANGLE****/
         this.angleRotation = Vector2.SignedAngle(Vector2.down, distanceToMouse);
-        /*AddNoise à l'angle a refaire 
+        /*AddNoise ï¿½ l'angle a refaire 
          * A REFAIRE pour plus consistant*/
         this.angleRotation += Random.Range(-60, 60);
 
@@ -52,6 +55,8 @@ public class Bout : MonoBehaviour
         Vector2 destination = (Vector2)target.position + move ;        
         
         target.DOMove(destination,1);
+
+
         
     
         /****DRAW LINE*******/
@@ -61,17 +66,32 @@ public class Bout : MonoBehaviour
             lineRenderer.SetPosition(points.Count -1,target.position);
         }
 
-        
+        lifeTime += Time.deltaTime;        
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("OnTrigger");
         if (other.tag == "Obstacle" || other.tag == "Border")
         {
             die();
         }
+
+         if(other.tag == "Root" && lifeTime > ignoreCollisionTime)
+        {
+            die();
+        }
     }
+
+    
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.tag == "Root" && lifeTime > ignoreCollisionTime)
+        {
+           die();
+        }
+    }
+
 
     public void die()
     {

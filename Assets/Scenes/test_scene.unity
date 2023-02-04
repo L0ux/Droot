@@ -685,6 +685,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boutPrefab: {fileID: 5438355102351489944, guid: 50ade6a0ca43562479216cfd45c56164, type: 3}
+  racinePrefab: {fileID: 8575215616215597132, guid: 64eb012ecccd74f38bebd8e6d3fd588c, type: 3}
   myCamera: {fileID: 1896636157}
 --- !u!4 &1255271558
 Transform:
