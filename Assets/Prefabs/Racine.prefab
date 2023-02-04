@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5438355102351489942}
   - component: {fileID: 5438355102351489940}
   - component: {fileID: 8575215616215597132}
-  - component: {fileID: 4845335312705228485}
+  - component: {fileID: 6970474868089775853}
   m_Layer: 0
   m_Name: Racine
   m_TagString: Root
@@ -67,8 +67,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a4634f0fc2bf4b8abc87b0e8e4e3474, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!60 &4845335312705228485
-PolygonCollider2D:
+--- !u!68 &6970474868089775853
+EdgeCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -81,14 +81,9 @@ PolygonCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths: []
+  m_EdgeRadius: 0
+  m_Points: []
+  m_AdjacentStartPoint: {x: 0, y: 0}
+  m_AdjacentEndPoint: {x: 0, y: 0}
+  m_UseAdjacentStartPoint: 0
+  m_UseAdjacentEndPoint: 0

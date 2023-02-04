@@ -5,13 +5,11 @@ using UnityEngine;
 public class Racine : MonoBehaviour
 {
 
-    PolygonCollider2D polygon;
-    List<Vector2> liste;
+    EdgeCollider2D collider;
       
     // Start is called before the first frame update
     void Start()
     {
-        liste = new List<Vector2>();
     }
 
     // Update is called once per frame
@@ -22,20 +20,11 @@ public class Racine : MonoBehaviour
 
     public void createCollider(List<Vector2> points)
     {
-        polygon = GetComponent<PolygonCollider2D>();
-        liste = points;
-        polygon.SetPath(0, points.ConvertAll(p => (Vector2)transform.InverseTransformPoint(p)));
-
+        collider = GetComponent<EdgeCollider2D>();
+        collider.points = points.ToArray();
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        if(liste != null)
-        {
-            liste.ForEach(p => Gizmos.DrawSphere(p, 0.05f));
-        }
-    }
+  
 
 
 }
