@@ -8,11 +8,14 @@ using UnityEngine.InputSystem;
 public class Bout : MonoBehaviour
 {
     private Transform target;
-/*    private int direction = 1;
-*/    private LineRenderer lineRenderer;    
+    /*0 is straight down*/
+    public float angleRotation  = 1; /*CHANGER EN PRIVATE*/
+    private float speed = 0;
+    
+    private LineRenderer lineRenderer;    
     private List<Vector2> points;
     private float pointSpacing = 0.1f;
-    private bool move = false ;
+    private bool isMoving = false ;
 
 
     private void Start()
@@ -27,20 +30,31 @@ public class Bout : MonoBehaviour
     void Update()
     {
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        Vector2 destination =  (Vector2)target.position + ((mousePosition -(Vector2)target.position )/10) ;
+        Vector2 distanceToMouse = mousePosition - (Vector2) target.position;
 
-        /*if(mousePosition.y > target.position.y){
-            target.DOMove(target.position,1);
-        }else{
-            target.DOMove(new Vector2(destination.x,mousePosition.y),1);
-        }*/
-        if (!this.move)
-            return;
+        /*****SPEED******/
+       
+        /*Si on bouge ET souris sous la racine*/
+        if (this.isMoving && target.position.y > mousePosition.y)
+            this.speed = (target.position.y - mousePosition.y) / 4;
+        else
+            speed = 0f;
 
-       target.DOMove(new Vector2(destination.x,mousePosition.y),1);
+        /*****ANGLE****/
+        this.angleRotation = Vector2.SignedAngle(Vector2.down, distanceToMouse);
+        /*AddNoise à l'angle a refaire 
+         * A REFAIRE pour plus consistant*/
+        this.angleRotation += Random.Range(-60, 60);
+
+
+        /****** MOVE *******/
+        Vector2 move = Quaternion.AngleAxis(angleRotation, new Vector3(0, 0, 1)) * Vector2.down * speed;
+        Vector2 destination = (Vector2)target.position + move ;        
+        
+        target.DOMove(destination,1);
         
     
-
+        /****DRAW LINE*******/
         if( Vector2.Distance(target.position,points.Last()) > pointSpacing){
             points.Add(target.position);        
             lineRenderer.positionCount = points.Count();
@@ -52,17 +66,24 @@ public class Bout : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Obstacle")
+        Debug.Log("OnTrigger");
+        if (other.tag == "Obstacle" || other.tag == "Border")
         {
-            GameManager.instance.launchBout();
-            target.DOMove(new Vector2(target.position.x, target.position.y), 1);
-            Destroy(this);
+            die();
         }
+    }
+
+    public void die()
+    {
+        GameManager.instance.launchBout();
+        target.DOMove(new Vector2(target.position.x, target.position.y), 1);
+        Destroy(this);
     }
 
     public void startToMove()
     {
-        this.move = true;
+        this.isMoving = true;
+        
     }
 
 }
