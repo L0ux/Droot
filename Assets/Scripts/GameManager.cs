@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance;
     [SerializeField] private Bout boutPrefab;
+    [SerializeField] private Racine racinePrefab;
     [SerializeField] private CinemachineVirtualCamera myCamera;
     Bout currentBout;
 
@@ -25,15 +26,20 @@ public class GameManager : MonoBehaviour
     {
         launchBout();
     }
-    public void launchBout()
+
+    public void launchBout(List<Vector2> points = null)
     {
+        if(points != null)
+        {
+            Racine racine = Instantiate(racinePrefab, Vector3.zero, Quaternion.identity);
+            racine.createCollider(points);
+        }
         currentBout = Instantiate(boutPrefab,Vector3.zero,Quaternion.identity);
         myCamera.Follow = currentBout.transform;
     }
     
     public void OnStartBout()
     {
-        Debug.Log("OnStarBout");
         this.currentBout.startToMove();
     }
 }
