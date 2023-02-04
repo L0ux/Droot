@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5641971861826532353}
   - component: {fileID: 4905944069120556720}
   - component: {fileID: 8917456704183014309}
+  - component: {fileID: 300712900619627367}
   m_Layer: 0
   m_Name: Bourgeon
   m_TagString: Untagged
@@ -111,3 +112,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.32, y: 0.32}
   m_EdgeRadius: 0
+--- !u!114 &300712900619627367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 565903282864744262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b11411fe2fc34d34b9b5018452caa3a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

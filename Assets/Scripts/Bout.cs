@@ -8,29 +8,37 @@ using System;
 
 public class Bout : MonoBehaviour
 {
-
+    
     public GameObject mask;
 
-    GameObject[] waterPOints;
     private Transform target;
-    
+
+
     /*0 is straight down*/
-    public float angleRotation  = 0; 
+    public float angleRotation  = 0;
+
     private float speed = 0;
     
     private LineRenderer lineRenderer;
     private List<Vector2> points;
+    private float pointSpacing = 0.05f;
+
 
     private bool isMoving = false ;
 
-    private float pointSpacing = 0.05f;
-    public const float ignoreCollisionTime = 0.5f;
-    private float lifeTime = .0f;
-    private List<float> precAngle;
+
+
+    /*Verify*/
+    Vector2 spawnLocation;
+    private const float distanceInsensibleOtherRoot = 0.8f;
+
 
     /*GestionBourgeons*/
     private Vector2 positionLastBourgon ;
     public const int BourgonEveryNbUnit = 3;
+    private float distanceBeforeNextBourgeon;
+
+    
 
     private void Start()
     {
@@ -38,10 +46,11 @@ public class Bout : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>(); 
         this.points = new List<Vector2>();
         positionLastBourgon = this.transform.position;
+        distanceBeforeNextBourgeon = BourgonEveryNbUnit + UnityEngine.Random.Range(-1, 1);
         lineRenderer.SetPosition(0, target.position);
         points.Add(target.position);
-        
-        precAngle = new List<float> ();
+        spawnLocation = target.position;
+
     }
 
     // Update is called once per frame
@@ -50,13 +59,12 @@ public class Bout : MonoBehaviour
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         Vector2 distanceToMouse = mousePosition - (Vector2) target.position;
 
-
         /*****ANGLE****/
         float angle = Vector2.SignedAngle(Vector2.down, distanceToMouse);
 
         /*REMAP angle */
-        float max = 89;
-        float min = -88;
+        float max = 79;
+        float min = -79;
 
         angle = Mathf.Min(angle, max);
         angle = Mathf.Max(angle, min);
@@ -90,30 +98,16 @@ public class Bout : MonoBehaviour
 
         /****** MOVE *******/
         Vector2 move = Quaternion.AngleAxis(angleRotation, new Vector3(0, 0, 1)) * Vector2.down * speed;
-        Vector2 destination = (Vector2)target.position + move ;        
+        Vector2 destination = (Vector2)target.position + move ;
         
 
         target.DOMove(destination,1);
 
 
-        
-    
-        /****DRAW LINE*******/
-        if( Vector2.Distance(target.position,points.Last()) > pointSpacing){
-            points.Add(target.position);
-            lineRenderer.positionCount = points.Count();
-            lineRenderer.SetPosition(points.Count -1,target.position);
-        }
+        drawLine();
+        spawnBourgeon();
 
-        if(Math.Abs(target.position.y- positionLastBourgon.y) > BourgonEveryNbUnit)
-        {
-            GameManager.instance.createBourgeon(target.position);
-            positionLastBourgon = target.position;
-        }
-
-
-        if (isMoving && speed > 0f)
-            lifeTime += Time.deltaTime;        
+  
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -123,7 +117,7 @@ public class Bout : MonoBehaviour
             die();
         }
 
-        if(other.tag == "Root" && lifeTime > ignoreCollisionTime)
+        if(other.tag == "Root" &&  Vector2.Distance(target.position,spawnLocation)>distanceInsensibleOtherRoot)
         {
             die();
         }
@@ -140,13 +134,36 @@ public class Bout : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.tag == "Root" && lifeTime > ignoreCollisionTime)
+        if (collision.tag == "Root" && Vector2.Distance(target.position, spawnLocation) > distanceInsensibleOtherRoot)
         {
             die();
         }
     }
 
+    void drawLine()
+    {
+        /****DRAW LINE*******/
+        if (Vector2.Distance(target.position, points.Last()) > pointSpacing)
+        {
+            points.Add(target.position);
+            lineRenderer.positionCount = points.Count();
+            lineRenderer.SetPosition(points.Count - 1, target.position);
+        }
 
+    }
+
+
+    private void spawnBourgeon()
+    {
+        /*InitBourgeon*/
+        if (Vector2.Distance(target.position, positionLastBourgon) > distanceBeforeNextBourgeon)
+        {
+            GameManager.instance.createBourgeon(target.position);
+            positionLastBourgon = target.position;
+            distanceBeforeNextBourgeon = BourgonEveryNbUnit + UnityEngine.Random.Range(-1, 1);
+
+        }
+    }
     public void die()
     {
         GameManager.instance.onDeathBout(points);
