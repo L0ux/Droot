@@ -24,22 +24,42 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
-        launchBout();
+        createNewBout();
+
     }
 
-    public void launchBout(List<Vector2> points = null)
+    public void onDeathBout(List<Vector2> points = null)
     {
-        if(points != null)
-        {
-            Racine racine = Instantiate(racinePrefab, Vector3.zero, Quaternion.identity);
-            racine.createCollider(points);
-        }
-        currentBout = Instantiate(boutPrefab,Vector3.zero,Quaternion.identity);
+        currentBout = null;
+        createRacine(points);
+        createNewBout();
+    }
+
+    public void createNewBout()
+    {
+        if (currentBout != null)
+            return;
+        currentBout = Instantiate(boutPrefab, Vector3.zero, Quaternion.identity);
         myCamera.Follow = currentBout.transform;
     }
     
     public void OnStartBout()
     {
+        if (currentBout == null)
+            return;
         this.currentBout.startToMove();
+    }
+    public void createRacine(List<Vector2> points = null)
+    {
+        if (points == null)
+            return;
+        Racine racine = Instantiate(racinePrefab, Vector3.zero, Quaternion.identity);
+        racine.createCollider(points);
+    }
+
+
+    public void reachWater()
+    {
+        Debug.Log("C'est GAGNE");
     }
 }
