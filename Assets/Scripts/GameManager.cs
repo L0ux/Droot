@@ -2,12 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.InputSystem;
+using System.Linq;
+
+
 public class GameManager : MonoBehaviour
 {
 
     public static GameManager instance;
     [SerializeField] private Bout boutPrefab;
     [SerializeField] private Racine racinePrefab;
+    [SerializeField] private GameObject bourgeonPrefab;
+    [SerializeField] private GameObject bourgeonContainer;
+
+    [SerializeField] private float sizeCameraOnZoom;
+    [SerializeField] private float sizeCameraOnDezoom;
+
+    [SerializeField] private GameObject startPoint;
+
+    private List<GameObject> bourgeons;
+
     [SerializeField] private CinemachineVirtualCamera myCamera;
     Bout currentBout;
 
@@ -19,12 +33,12 @@ public class GameManager : MonoBehaviour
             Destroy(this);
     }
 
-
-
-
     public void Start()
     {
-        createNewBout();
+        bourgeons = new List<GameObject>();
+        myCamera.m_Lens.OrthographicSize = sizeCameraOnDezoom;
+
+        createBourgeon(startPoint.transform.position);
 
     }
 
@@ -32,24 +46,35 @@ public class GameManager : MonoBehaviour
     {
         currentBout = null;
         createRacine(points);
-        createNewBout();
+        /*Dezoom*/
+        myCamera.m_Lens.OrthographicSize = sizeCameraOnDezoom;
+        
+
     }
 
-    public void createNewBout()
+    private void createNewBout(Vector2 position)
     {
         if (currentBout != null)
             return;
-        currentBout = Instantiate(boutPrefab, Vector3.zero, Quaternion.identity);
+        myCamera.m_Lens.OrthographicSize = sizeCameraOnZoom;
+
+        currentBout = Instantiate(boutPrefab, position, Quaternion.identity);
         myCamera.Follow = currentBout.transform;
     }
     
-    public void OnStartBout()
+    private void OnClick()
     {
         if (currentBout == null)
-            return;
-        this.currentBout.startToMove();
+        {
+            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+            Transform closestBourgeon =  bourgeonContainer.GetComponentsInChildren<Transform>().OrderBy(trsf => Vector2.Distance(trsf.position,mousePosition) ).First();
+            createNewBout(closestBourgeon.position);
+        }
+        else
+            this.currentBout.startToMove();
+
     }
-    public void createRacine(List<Vector2> points = null)
+    private void createRacine(List<Vector2> points = null)
     {
         if (points == null)
             return;
@@ -57,6 +82,11 @@ public class GameManager : MonoBehaviour
         racine.createCollider(points);
     }
 
+    public void createBourgeon(Vector2 positionBourgeon )
+    {
+        GameObject newBourgeon = Instantiate(bourgeonPrefab, bourgeonContainer.transform);
+        newBourgeon.transform.position = positionBourgeon;
+    }
 
     public void reachWater()
     {
