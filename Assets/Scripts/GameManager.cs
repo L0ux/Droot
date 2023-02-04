@@ -4,7 +4,7 @@ using UnityEngine;
 using Cinemachine;
 using UnityEngine.InputSystem;
 using System.Linq;
-
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,10 +20,10 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject startPoint;
 
-    private List<GameObject> bourgeons;
-
     [SerializeField] private CinemachineVirtualCamera myCamera;
     Bout currentBout;
+
+    Bourgeon currentSelectedBourgeon;
 
     public void Awake()
     {
@@ -35,13 +35,45 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
-        bourgeons = new List<GameObject>();
         myCamera.m_Lens.OrthographicSize = sizeCameraOnDezoom;
-
         createBourgeon(startPoint.transform.position);
-
+        selectBourgeon(bourgeonContainer.GetComponentInChildren<Bourgeon>());
     }
 
+    public void Update()
+    {
+        if (currentBout == null)
+            waitForSelectionBourgeon();
+    }
+
+    private void waitForSelectionBourgeon()
+    {
+        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        Bourgeon[] allBourgeons = bourgeonContainer.GetComponentsInChildren<Bourgeon>().ToArray();
+        if (allBourgeons.Count() == 0)
+            return;
+        Bourgeon closestBourgeon =  bourgeonContainer.GetComponentsInChildren<Bourgeon>().OrderBy(brg => Vector2.Distance(brg.transform.position, mousePosition)).First();
+
+        selectBourgeon(closestBourgeon);
+
+    }
+    private void selectBourgeon(Bourgeon bourgeon)
+    {
+        if (currentSelectedBourgeon == bourgeon)
+            return;
+        
+        deselectBourgeon();
+        currentSelectedBourgeon = bourgeon;
+        currentSelectedBourgeon.GetComponent<SpriteRenderer>().color = Color.yellow;
+
+    }
+    private void deselectBourgeon()
+    {
+        if (currentSelectedBourgeon == null)
+            return;
+        currentSelectedBourgeon.GetComponent<SpriteRenderer>().color = Color.white;
+        currentSelectedBourgeon = null;
+    }
     public void onDeathBout(List<Vector2> points = null)
     {
         currentBout = null;
@@ -56,6 +88,8 @@ public class GameManager : MonoBehaviour
     {
         if (currentBout != null)
             return;
+
+        deselectBourgeon();
         myCamera.m_Lens.OrthographicSize = sizeCameraOnZoom;
 
         currentBout = Instantiate(boutPrefab, position, Quaternion.identity);
@@ -66,14 +100,12 @@ public class GameManager : MonoBehaviour
     {
         if (currentBout == null)
         {
-            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            Transform closestBourgeon =  bourgeonContainer.GetComponentsInChildren<Transform>().OrderBy(trsf => Vector2.Distance(trsf.position,mousePosition) ).First();
-            createNewBout(closestBourgeon.position);
+            createNewBout(currentSelectedBourgeon.transform.position);
         }
         else
             this.currentBout.startToMove();
-
     }
+
     private void createRacine(List<Vector2> points = null)
     {
         if (points == null)
