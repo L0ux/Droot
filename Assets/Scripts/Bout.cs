@@ -8,19 +8,19 @@ using UnityEngine.InputSystem;
 public class Bout : MonoBehaviour
 {
     private Transform target;
-/*    private int direction = 1;
-*/    private LineRenderer lineRenderer;    
+    private LineRenderer lineRenderer;    
     private List<Vector2> points;
-    private float pointSpacing = 0.1f;
+    private float pointSpacing = 0.05f;
     private bool move = false ;
-
+    public const float ignoreCollisionTime = 0.5f;
+    private float lifeTime = .0f;
 
     private void Start()
     {
         target = GetComponent<Transform>();
         lineRenderer = GetComponent<LineRenderer>(); 
         this.points = new List<Vector2>();
-        points.Add(target.position);      
+        points.Add(target.position);
     }
 
     // Update is called once per frame
@@ -34,8 +34,15 @@ public class Bout : MonoBehaviour
         }else{
             target.DOMove(new Vector2(destination.x,mousePosition.y),1);
         }*/
+
+
         if (!this.move)
             return;
+
+        lifeTime += Time.deltaTime;
+
+        Debug.Log(lifeTime);
+
 
        target.DOMove(new Vector2(destination.x,mousePosition.y),1);
         
@@ -52,13 +59,33 @@ public class Bout : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+
         if (other.tag == "Obstacle")
         {
-            GameManager.instance.launchBout();
+            GameManager.instance.launchBout(points);
+            target.DOMove(new Vector2(target.position.x, target.position.y), 1);
+            Destroy(this);
+        }
+
+        if(other.tag == "Root" && lifeTime > ignoreCollisionTime)
+        {
+            GameManager.instance.launchBout(points);
+            target.DOMove(new Vector2(target.position.x, target.position.y), 1);
+            Destroy(this);
+        }
+
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.tag == "Root" && lifeTime > ignoreCollisionTime)
+        {
+            GameManager.instance.launchBout(points);
             target.DOMove(new Vector2(target.position.x, target.position.y), 1);
             Destroy(this);
         }
     }
+
 
     public void startToMove()
     {
