@@ -4,7 +4,7 @@ using UnityEngine;
 using Cinemachine;
 using UnityEngine.InputSystem;
 using System.Linq;
-using System;
+using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 
@@ -35,12 +35,16 @@ public class GameManager : MonoBehaviour
     public GameObject waterParticles;
 
 
+
+
     Bout currentBout;
 
     Bourgeon currentSelectedBourgeon;
-    public bool isWinning = false;
+    public bool gameEnded = false;
     public bool cameraAnimation = true;
 
+    [SerializeField] GameObject panelVictoire;
+    [SerializeField] GameObject panelDefaite;
 
     public void Awake()
     {
@@ -73,7 +77,7 @@ public class GameManager : MonoBehaviour
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         Bourgeon[] allBourgeons = bourgeonContainer.GetComponentsInChildren<Bourgeon>().ToArray();
         if (allBourgeons.Count() == 0)
-            return;
+            onLoose();
         Bourgeon closestBourgeon =  bourgeonContainer.GetComponentsInChildren<Bourgeon>().OrderBy(brg => Vector2.Distance(brg.transform.position, mousePosition)).First();
 
         selectBourgeon(closestBourgeon);
@@ -99,10 +103,14 @@ public class GameManager : MonoBehaviour
     public void onDeathBout(List<Vector2> points = null)
     {
 
-
         nbBoutDead++;
         textRacine.text = (nbRacineMaxForLvl - nbBoutDead) + " <sprite name=root2>";
+        if (nbBoutDead >= nbRacineMaxForLvl)
+        {
 
+            onLoose();
+            return;
+        }
         currentBout = null;
         createRacine(points);
         myCameraLarge.transform.position = new Vector3(points.Last().x, points.Last().y+10, -10);
@@ -129,18 +137,11 @@ public class GameManager : MonoBehaviour
     private void OnClick()
     {
 
-        if (isWinning || cameraAnimation)
+        if (gameEnded || cameraAnimation)
             return;
 
         if (currentBout == null)
-        {
             createNewBout(currentSelectedBourgeon.transform.position);
-        }
-        else
-        {
-    
-            this.currentBout.startToMove();
-        }
     }
 
     private void createRacine(List<Vector2> points = null)
@@ -172,31 +173,40 @@ public class GameManager : MonoBehaviour
         newBourgeon.transform.position = positionBourgeon;
     }
 
-    public bool onReachWater(GameObject eau, Bout picker)
+    public void onReachWater(GameObject eau, Bout picker)
     {
         if (!activatedWater.Contains(eau))
         {
+            activatedWater.Add(eau);
+            if (activatedWater.Count() == allWater.Count())
+            {
+                onWin();
+                return;
+            }
             GameObject waterParticleGameObject = Instantiate(waterParticles, eau.transform.position, Quaternion.identity);
             myCameraSerre.Follow = eau.transform;
             eau.GetComponent<Eau>().pickWater(picker);
             eau.GetComponent<PolygonCollider2D>().enabled = false;
-            activatedWater.Add(eau);
             textEau.text = activatedWater.Count() + "/" + allWater.Count() + " <sprite name=goutte>";
+
             
-            if(activatedWater.Count() == allWater.Count())
-            {
-                onWin();
-            }
         }
-        return false;
     }
 
     private void onWin()
     {
-        isWinning = true;
-        Debug.Log("C'est gagn?");
+        gameEnded = true;
+        StartCoroutine(dezoomCamera());
+        myCameraLarge.Follow = startPoint.transform;
+        panelVictoire.GetComponent<Animator>().SetTrigger("victory");
     }
-
+    private void onLoose()
+    {
+        gameEnded = true;
+        StartCoroutine(dezoomCamera());
+        myCameraLarge.Follow = startPoint.transform;
+        panelDefaite.GetComponent<Animator>().SetTrigger("victory");
+    }
     public IEnumerator zoomCamera()
     {
         myCameraLarge.Priority = 1;

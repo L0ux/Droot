@@ -193,7 +193,6 @@ public class Bout : MonoBehaviour
     public void startToMove()
     {
         this.isMoving = true;
-
     }
     
 

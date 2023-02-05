@@ -199,6 +199,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mask: {fileID: 1498223774740787056}
   angleRotation: 0
+  startToMoveAfter: 0.2
 --- !u!61 &5438355102351489943
 BoxCollider2D:
   m_ObjectHideFlags: 0
