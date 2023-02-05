@@ -124,7 +124,9 @@ public class Bout : MonoBehaviour
 
         if(other.tag == "Eau")
         {
-            GameManager.instance.reachWater();
+            /*Ne sert à rien POUR L'INSTANT HEHE*/
+            bool dejaActive = GameManager.instance.onReachWater(other.gameObject);
+
             die();
         }
         

@@ -5,9 +5,18 @@ using Cinemachine;
 using UnityEngine.InputSystem;
 using System.Linq;
 using System;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] int nbRacineMaxForLvl;
+    [SerializeField] List<GameObject> allWater;
+    private List<GameObject> activatedWater;
+    private int nbBoutDead;
+
+    [SerializeField] TextMeshProUGUI textEau;
+    [SerializeField] TextMeshProUGUI textRacine;
+
 
     public static GameManager instance;
     [SerializeField] private Bout boutPrefab;
@@ -35,7 +44,13 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
-        myCamera.m_Lens.OrthographicSize = sizeCameraOnDezoom;
+        Debug.Log(allWater.Count());
+        activatedWater = new List<GameObject>();
+        nbBoutDead = 0;
+        textRacine.text = (nbRacineMaxForLvl - nbBoutDead ) + " ICONE RACINE";
+        textEau.text = activatedWater.Count() + "/" + allWater.Count() +" ICON GOUTTE";
+
+        StartCoroutine(zoomCamera());
         createBourgeon(startPoint.transform.position);
         selectBourgeon(bourgeonContainer.GetComponentInChildren<Bourgeon>());
     }
@@ -76,12 +91,13 @@ public class GameManager : MonoBehaviour
     }
     public void onDeathBout(List<Vector2> points = null)
     {
+        nbBoutDead++;
+        textRacine.text = nbBoutDead + "/" + nbRacineMaxForLvl + " ICONE RACINE";
+
         currentBout = null;
         createRacine(points);
         /*Dezoom*/
-        myCamera.m_Lens.OrthographicSize = sizeCameraOnDezoom;
-        
-
+        StartCoroutine(dezoomCamera());
     }
 
     private void createNewBout(Vector2 position)
@@ -90,8 +106,7 @@ public class GameManager : MonoBehaviour
             return;
 
         deselectBourgeon();
-        myCamera.m_Lens.OrthographicSize = sizeCameraOnZoom;
-
+        StartCoroutine(zoomCamera());
         currentBout = Instantiate(boutPrefab, position, Quaternion.identity);
         myCamera.Follow = currentBout.transform;
     }
@@ -120,8 +135,42 @@ public class GameManager : MonoBehaviour
         newBourgeon.transform.position = positionBourgeon;
     }
 
-    public void reachWater()
+    public bool onReachWater(GameObject eau)
     {
-        Debug.Log("C'est GAGNE");
+        if (!activatedWater.Contains(eau))
+        {
+            activatedWater.Add(eau);
+            textEau.text = activatedWater.Count() + "/" + allWater.Count() + " ICONE GOUTTE";
+        
+            
+            if(activatedWater.Count() == allWater.Count())
+            {
+                onWin();
+            }
+        }
+        return false;
     }
+    private void onWin()
+    {
+        Debug.Log("C'est gagné");
+    }
+
+    public IEnumerator zoomCamera()
+    {
+        while( myCamera.m_Lens.OrthographicSize > sizeCameraOnZoom)
+        {
+            myCamera.m_Lens.OrthographicSize -= 0.1f;
+            yield return null;
+        }
+    }
+
+    public IEnumerator dezoomCamera()
+    {
+        while (myCamera.m_Lens.OrthographicSize < sizeCameraOnDezoom)
+        {
+            myCamera.m_Lens.OrthographicSize += 0.1f;
+            yield return null;
+        }
+    }
+
 }
