@@ -51,8 +51,6 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
-
-        Debug.Log(allWater.Count());
         activatedWater = new List<GameObject>();
         nbBoutDead = 0;
         textRacine.text = (nbRacineMaxForLvl - nbBoutDead ) + " <sprite name=Racine>";
@@ -87,14 +85,14 @@ public class GameManager : MonoBehaviour
         
         deselectBourgeon();
         currentSelectedBourgeon = bourgeon;
-        currentSelectedBourgeon.GetComponent<SpriteRenderer>().color = Color.yellow;
+        currentSelectedBourgeon.Select();
 
     }
     private void deselectBourgeon()
     {
         if (currentSelectedBourgeon == null)
             return;
-        currentSelectedBourgeon.GetComponent<SpriteRenderer>().color = Color.white;
+        currentSelectedBourgeon.UnSelect();
         currentSelectedBourgeon = null;
     }
     public void onDeathBout(List<Vector2> points = null)
@@ -149,7 +147,6 @@ public class GameManager : MonoBehaviour
         GameObject newBourgeon = Instantiate(bourgeonPrefab, bourgeonContainer.transform);
         float yRotation = 0;
         int random = UnityEngine.Random.Range(0, 10);
-        Debug.Log(random);
         if (random > 5)
         {
             yRotation = UnityEngine.Random.Range(-230, -270);
