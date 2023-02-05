@@ -19,6 +19,8 @@ public class Bourgeon : MonoBehaviour
 
     public void Select()
     {
+        if(spriteRenderer == null )
+            spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = selectedSprite;
     }
 
