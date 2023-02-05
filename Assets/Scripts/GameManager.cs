@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] public CinemachineVirtualCamera myCameraLarge;
     [SerializeField] public CinemachineVirtualCamera myCameraSerre;
+    public GameObject waterParticles;
 
 
     Bout currentBout;
@@ -156,7 +157,6 @@ public class GameManager : MonoBehaviour
         if(yrotation == 0)
         {
             int random = UnityEngine.Random.Range(0, 10);
-            Debug.Log(random);
             if (random > 5)
             {
                 yrotation = UnityEngine.Random.Range(-230, -270);
@@ -176,6 +176,7 @@ public class GameManager : MonoBehaviour
     {
         if (!activatedWater.Contains(eau))
         {
+            GameObject waterParticleGameObject = Instantiate(waterParticles, eau.transform.position, Quaternion.identity);
             myCameraSerre.Follow = eau.transform;
             eau.GetComponent<Eau>().pickWater(picker);
             eau.GetComponent<PolygonCollider2D>().enabled = false;

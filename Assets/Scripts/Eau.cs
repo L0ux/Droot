@@ -5,7 +5,7 @@ using UnityEngine;
 public class Eau : MonoBehaviour
 {
     Bout pickedBy;
-    
+
     public void pickWater(Bout leGourmand)
     {
         pickedBy = leGourmand;
@@ -17,6 +17,8 @@ public class Eau : MonoBehaviour
     {
         pickedBy.die();
         GameManager.instance.dezoomCamera();
+        
     }
+
 
 }

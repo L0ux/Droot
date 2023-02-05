@@ -810,6 +810,7 @@ MonoBehaviour:
   startPoint: {fileID: 1236313168}
   myCameraLarge: {fileID: 1911754810}
   myCameraSerre: {fileID: 567367814}
+  waterParticles: {fileID: 5558624119222974406, guid: bd7e0e3b60d3a4496a1aaead6e13eaf5, type: 3}
   cameraAnimation: 1
 --- !u!4 &597940226
 Transform:
@@ -1113,6 +1114,38 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5558624119222974407, guid: 49551dc4cf6e146faa66d16fa8145369, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 464398623
+      objectReference: {fileID: 0}
+    - target: {fileID: 5722740133069799502, guid: 49551dc4cf6e146faa66d16fa8145369, type: 3}
+      propertyPath: looping
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5722740133069799502, guid: 49551dc4cf6e146faa66d16fa8145369, type: 3}
+      propertyPath: lengthInSec
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5722740133069799502, guid: 49551dc4cf6e146faa66d16fa8145369, type: 3}
+      propertyPath: moveWithTransform
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5722740133069799502, guid: 49551dc4cf6e146faa66d16fa8145369, type: 3}
+      propertyPath: InitialModule.rotation3D
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5722740133069799502, guid: 49551dc4cf6e146faa66d16fa8145369, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9203820824730140403, guid: 49551dc4cf6e146faa66d16fa8145369, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9203820824730140403, guid: 49551dc4cf6e146faa66d16fa8145369, type: 3}
+      propertyPath: m_SortingOrder
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 9203820824730140403, guid: 49551dc4cf6e146faa66d16fa8145369, type: 3}
       propertyPath: m_SortingLayerID
       value: 464398623
       objectReference: {fileID: 0}
