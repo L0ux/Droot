@@ -29,7 +29,9 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject startPoint;
 
-    [SerializeField] private CinemachineVirtualCamera myCamera;
+    [SerializeField] public CinemachineVirtualCamera myCameraLarge;
+    [SerializeField] public CinemachineVirtualCamera myCameraSerre;
+
     Bout currentBout;
 
     Bourgeon currentSelectedBourgeon;
@@ -44,13 +46,14 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
+
         Debug.Log(allWater.Count());
         activatedWater = new List<GameObject>();
         nbBoutDead = 0;
-        textRacine.text = (nbRacineMaxForLvl - nbBoutDead ) + " ICONE RACINE";
-        textEau.text = activatedWater.Count() + "/" + allWater.Count() +" ICON GOUTTE";
+        textRacine.text = (nbRacineMaxForLvl - nbBoutDead ) + " <sprite name=Racine>";
+        textEau.text = activatedWater.Count() + "/" + allWater.Count() + " <sprite name=GoutteEau>";
+        myCameraSerre.Follow=startPoint.transform;
 
-        StartCoroutine(zoomCamera());
         createBourgeon(startPoint.transform.position);
         selectBourgeon(bourgeonContainer.GetComponentInChildren<Bourgeon>());
     }
@@ -91,11 +94,14 @@ public class GameManager : MonoBehaviour
     }
     public void onDeathBout(List<Vector2> points = null)
     {
+
+
         nbBoutDead++;
-        textRacine.text = nbBoutDead + "/" + nbRacineMaxForLvl + " ICONE RACINE";
+        textRacine.text = (nbRacineMaxForLvl - nbBoutDead) + " <sprite name=Racine>";
 
         currentBout = null;
         createRacine(points);
+        myCameraLarge.transform.position = new Vector3(points.Last().x, points.Last().y+10, -10);
         /*Dezoom*/
         StartCoroutine(dezoomCamera());
     }
@@ -108,7 +114,7 @@ public class GameManager : MonoBehaviour
         deselectBourgeon();
         StartCoroutine(zoomCamera());
         currentBout = Instantiate(boutPrefab, position, Quaternion.identity);
-        myCamera.Follow = currentBout.transform;
+        myCameraSerre.Follow = currentBout.transform;
     }
     
     private void OnClick()
@@ -140,7 +146,7 @@ public class GameManager : MonoBehaviour
         if (!activatedWater.Contains(eau))
         {
             activatedWater.Add(eau);
-            textEau.text = activatedWater.Count() + "/" + allWater.Count() + " ICONE GOUTTE";
+            textEau.text = activatedWater.Count() + "/" + allWater.Count() + " <sprite name=GoutteEau>";
         
             
             if(activatedWater.Count() == allWater.Count())
@@ -157,20 +163,28 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator zoomCamera()
     {
-        while( myCamera.m_Lens.OrthographicSize > sizeCameraOnZoom)
+        myCameraLarge.Priority = 1;
+        myCameraSerre.Priority = 10;
+
+        yield return null;
+        /*while( myCamera.m_Lens.OrthographicSize > sizeCameraOnZoom)
         {
             myCamera.m_Lens.OrthographicSize -= 0.1f;
             yield return null;
-        }
+        }*/
     }
 
     public IEnumerator dezoomCamera()
     {
-        while (myCamera.m_Lens.OrthographicSize < sizeCameraOnDezoom)
+        myCameraLarge.Priority = 10;
+        myCameraSerre.Priority = 1;
+
+        yield return null;
+        /*while (myCamera.m_Lens.OrthographicSize < sizeCameraOnDezoom)
         {
             myCamera.m_Lens.OrthographicSize += 0.1f;
             yield return null;
-        }
+        }*/
     }
 
 }
