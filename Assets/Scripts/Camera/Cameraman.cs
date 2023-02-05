@@ -9,6 +9,7 @@ public class Cameraman : MonoBehaviour
     public void onEndTravellingStart()
     {
         GameManager.instance.myCameraLarge.Follow = null;
+        GameManager.instance.cameraAnimation = false;
         StartCoroutine(GameManager.instance.zoomCamera());
     }
 }

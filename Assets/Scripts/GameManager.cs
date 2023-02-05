@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 using System.Linq;
 using System;
 using TMPro;
+using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
@@ -32,9 +33,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] public CinemachineVirtualCamera myCameraLarge;
     [SerializeField] public CinemachineVirtualCamera myCameraSerre;
 
+
     Bout currentBout;
 
     Bourgeon currentSelectedBourgeon;
+    bool isWinning = false;
+    public bool cameraAnimation = true;
+
 
     public void Awake()
     {
@@ -119,6 +124,10 @@ public class GameManager : MonoBehaviour
     
     private void OnClick()
     {
+
+        if (isWinning || cameraAnimation)
+            return;
+
         if (currentBout == null)
         {
             createNewBout(currentSelectedBourgeon.transform.position);
@@ -138,6 +147,19 @@ public class GameManager : MonoBehaviour
     public void createBourgeon(Vector2 positionBourgeon )
     {
         GameObject newBourgeon = Instantiate(bourgeonPrefab, bourgeonContainer.transform);
+        float yRotation = 0;
+        int random = UnityEngine.Random.Range(0, 10);
+        Debug.Log(random);
+        if (random > 5)
+        {
+            yRotation = UnityEngine.Random.Range(-230, -270);
+        }
+        else
+        {
+            yRotation = UnityEngine.Random.Range(-20, -115);
+        }
+        Vector3 desiredRotation = new Vector3(0, 0, yRotation);
+        newBourgeon.transform.DORotate(desiredRotation,0);
         newBourgeon.transform.position = positionBourgeon;
     }
 
@@ -145,6 +167,7 @@ public class GameManager : MonoBehaviour
     {
         if (!activatedWater.Contains(eau))
         {
+            eau.GetComponent<PolygonCollider2D>().enabled = false;
             activatedWater.Add(eau);
             textEau.text = activatedWater.Count() + "/" + allWater.Count() + " <sprite name=GoutteEau>";
         
@@ -156,9 +179,11 @@ public class GameManager : MonoBehaviour
         }
         return false;
     }
+
     private void onWin()
     {
-        Debug.Log("C'est gagné");
+        isWinning = true;
+        Debug.Log("C'est gagn?");
     }
 
     public IEnumerator zoomCamera()
