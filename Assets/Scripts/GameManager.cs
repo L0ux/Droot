@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
     Bout currentBout;
 
     Bourgeon currentSelectedBourgeon;
-    bool isWinning = false;
+    public bool isWinning = false;
     public bool cameraAnimation = true;
 
 
@@ -54,8 +54,8 @@ public class GameManager : MonoBehaviour
     {
         activatedWater = new List<GameObject>();
         nbBoutDead = 0;
-        textRacine.text = (nbRacineMaxForLvl - nbBoutDead ) + " <sprite name=Racine>";
-        textEau.text = activatedWater.Count() + "/" + allWater.Count() + " <sprite name=GoutteEau>";
+        textRacine.text = (nbRacineMaxForLvl - nbBoutDead ) + " <sprite name=root2>";
+        textEau.text = activatedWater.Count() + "/" + allWater.Count() + " <sprite name=goutte>";
         myCameraSerre.Follow=startPoint.transform;
 
         createBourgeon(startPoint.transform.position,90);
@@ -101,7 +101,7 @@ public class GameManager : MonoBehaviour
 
 
         nbBoutDead++;
-        textRacine.text = (nbRacineMaxForLvl - nbBoutDead) + " <sprite name=Racine>";
+        textRacine.text = (nbRacineMaxForLvl - nbBoutDead) + " <sprite name=root2>";
 
         currentBout = null;
         createRacine(points);
@@ -181,7 +181,7 @@ public class GameManager : MonoBehaviour
             eau.GetComponent<Eau>().pickWater(picker);
             eau.GetComponent<PolygonCollider2D>().enabled = false;
             activatedWater.Add(eau);
-            textEau.text = activatedWater.Count() + "/" + allWater.Count() + " <sprite name=GoutteEau>";
+            textEau.text = activatedWater.Count() + "/" + allWater.Count() + " <sprite name=goutte>";
             
             if(activatedWater.Count() == allWater.Count())
             {

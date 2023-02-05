@@ -21,6 +21,8 @@ public class Panner : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.instance.isWinning)
+            return;
         float x = myInputProvider.GetAxisValue(0);
         float y = myInputProvider.GetAxisValue(1);
         float z = myInputProvider.GetAxisValue(2);
