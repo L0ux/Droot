@@ -38,9 +38,15 @@ public class Panner : MonoBehaviour
         if(y >= Screen.height * 0.7f)
         {
             direction.y += 1; 
-        }else if (y <= Screen.height * 0.3f)
+            if(y >= Screen.height * 0.9f)
+                direction.y += 1;
+
+        }
+        else if (y <= Screen.height * 0.3f)
         {
             direction.y -= 1;
+            if (y <= Screen.height * 0.1f)
+                direction.y -= 1;
         }
 
         return direction;
