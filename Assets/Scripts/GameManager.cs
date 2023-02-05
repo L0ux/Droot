@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
         textEau.text = activatedWater.Count() + "/" + allWater.Count() + " <sprite name=GoutteEau>";
         myCameraSerre.Follow=startPoint.transform;
 
-        createBourgeon(startPoint.transform.position);
+        createBourgeon(startPoint.transform.position,90);
         selectBourgeon(bourgeonContainer.GetComponentInChildren<Bourgeon>());
     }
 
@@ -78,8 +78,8 @@ public class GameManager : MonoBehaviour
         Bourgeon closestBourgeon =  bourgeonContainer.GetComponentsInChildren<Bourgeon>().OrderBy(brg => Vector2.Distance(brg.transform.position, mousePosition)).First();
 
         selectBourgeon(closestBourgeon);
-
     }
+
     private void selectBourgeon(Bourgeon bourgeon)
     {
         if (currentSelectedBourgeon == bourgeon)
@@ -107,6 +107,7 @@ public class GameManager : MonoBehaviour
         currentBout = null;
         createRacine(points);
         myCameraLarge.transform.position = new Vector3(points.Last().x, points.Last().y+10, -10);
+
         /*Dezoom*/
         StartCoroutine(dezoomCamera());
     }
@@ -117,8 +118,8 @@ public class GameManager : MonoBehaviour
             return;
 
         deselectBourgeon();
-        StartCoroutine(zoomCamera());
         currentBout = Instantiate(boutPrefab, position, Quaternion.identity);
+        StartCoroutine(zoomCamera());
         myCameraSerre.Follow = currentBout.transform;
     }
     
@@ -144,33 +145,37 @@ public class GameManager : MonoBehaviour
         racine.createCollider(points);
     }
 
-    public void createBourgeon(Vector2 positionBourgeon )
+    public void createBourgeon(Vector2 positionBourgeon, float yrotation = 0 )
     {
         GameObject newBourgeon = Instantiate(bourgeonPrefab, bourgeonContainer.transform);
-        float yRotation = 0;
-        int random = UnityEngine.Random.Range(0, 10);
-        Debug.Log(random);
-        if (random > 5)
+        if(yrotation == 0)
         {
-            yRotation = UnityEngine.Random.Range(-230, -270);
+            int random = UnityEngine.Random.Range(0, 10);
+            Debug.Log(random);
+            if (random > 5)
+            {
+                yrotation = UnityEngine.Random.Range(-230, -270);
+            }
+            else
+            {
+                yrotation = UnityEngine.Random.Range(-20, -115);
+            }
         }
-        else
-        {
-            yRotation = UnityEngine.Random.Range(-20, -115);
-        }
-        Vector3 desiredRotation = new Vector3(0, 0, yRotation);
+
+        Vector3 desiredRotation = new Vector3(0, 0, yrotation);
         newBourgeon.transform.DORotate(desiredRotation,0);
         newBourgeon.transform.position = positionBourgeon;
     }
 
-    public bool onReachWater(GameObject eau)
+    public bool onReachWater(GameObject eau, Bout picker)
     {
         if (!activatedWater.Contains(eau))
         {
+            myCameraSerre.Follow = eau.transform;
+            eau.GetComponent<Eau>().pickWater(picker);
             eau.GetComponent<PolygonCollider2D>().enabled = false;
             activatedWater.Add(eau);
             textEau.text = activatedWater.Count() + "/" + allWater.Count() + " <sprite name=GoutteEau>";
-        
             
             if(activatedWater.Count() == allWater.Count())
             {

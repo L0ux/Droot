@@ -26,6 +26,7 @@ public class Bout : MonoBehaviour
 
     private bool isMoving = false ;
 
+    private bool hasReachWater = false;
 
 
     /*Verify*/
@@ -56,6 +57,12 @@ public class Bout : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        drawLine();
+
+        if (hasReachWater)
+            return;
+
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         Vector2 distanceToMouse = mousePosition - (Vector2) target.position;
 
@@ -104,7 +111,6 @@ public class Bout : MonoBehaviour
         target.DOMove(destination,1);
 
 
-        drawLine();
         spawnBourgeon();
 
   
@@ -124,10 +130,15 @@ public class Bout : MonoBehaviour
 
         if(other.tag == "Eau")
         {
-            /*Ne sert à rien POUR L'INSTANT HEHE*/
-            bool dejaActive = GameManager.instance.onReachWater(other.gameObject);
+            hasReachWater = true;
+            Debug.Log("Position eau" + other.transform.position);
+            Debug.Log("My Position " + other.transform.position);
 
-            die();
+            target.DOMove(other.transform.position,1);
+            isMoving = false;
+            /*Ne sert à rien POUR L'INSTANT HEHE*/
+            GameManager.instance.onReachWater(other.gameObject, this);
+
         }
         
     }
