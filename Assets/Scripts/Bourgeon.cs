@@ -15,10 +15,18 @@ public class Bourgeon : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }    
 
- 
+    public void retract()
+    {
+        Animator myAnimator = GetComponent<Animator>();
+        myAnimator.enabled = true;
+        myAnimator.SetTrigger("onRetract");
+    }
 
     public void Select()
     {
+        if(spriteRenderer == null)
+            spriteRenderer = GetComponent<SpriteRenderer>();
+
         spriteRenderer.sprite = selectedSprite;
     }
 

@@ -114,13 +114,17 @@ public class GameManager : MonoBehaviour
     {
         if (currentBout != null)
             return;
-
+        currentSelectedBourgeon.retract();
         deselectBourgeon();
+
         currentBout = Instantiate(boutPrefab, position, Quaternion.identity);
         StartCoroutine(zoomCamera());
         myCameraSerre.Follow = currentBout.transform;
     }
     
+    
+
+
     private void OnClick()
     {
 
@@ -132,7 +136,10 @@ public class GameManager : MonoBehaviour
             createNewBout(currentSelectedBourgeon.transform.position);
         }
         else
+        {
+    
             this.currentBout.startToMove();
+        }
     }
 
     private void createRacine(List<Vector2> points = null)
