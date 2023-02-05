@@ -587,6 +587,7 @@ GameObject:
   m_Component:
   - component: {fileID: 567367813}
   - component: {fileID: 567367814}
+  - component: {fileID: 567367815}
   m_Layer: 0
   m_Name: CameraSerre
   m_TagString: Untagged
@@ -648,6 +649,23 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 1199398659}
+--- !u!114 &567367815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567367812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2fba25a5cd15594e8f050a11e386c80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ConfineMode: 0
+  m_BoundingVolume: {fileID: 0}
+  m_BoundingShape2D: {fileID: 1280457316}
+  m_ConfineScreenEdges: 1
+  m_Damping: 0
 --- !u!1001 &580185763
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2153,9 +2171,11 @@ PolygonCollider2D:
   m_Points:
     m_Paths:
     - - {x: 19.139078, y: -23.921124}
+      - {x: 19.143934, y: -9.036158}
+      - {x: 19.469, y: -7.9810557}
       - {x: 19.478039, y: -7.95172}
-      - {x: 19.390856, y: 26.542889}
-      - {x: -15.35903, y: 26.115759}
+      - {x: 18.963112, y: 26.581774}
+      - {x: -14.970171, y: 26.115759}
       - {x: -14.964897, y: -23.908264}
 --- !u!50 &1280457317
 Rigidbody2D:
@@ -3549,7 +3569,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2068223486}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.8579445, y: 16.610018, z: -10}
+  m_LocalPosition: {x: -1.2865486, y: 16.600336, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

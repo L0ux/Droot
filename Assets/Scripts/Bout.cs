@@ -36,10 +36,10 @@ public class Bout : MonoBehaviour
 
     /*GestionBourgeons*/
     private Vector2 positionLastBourgon ;
-    public const int BourgonEveryNbUnit = 3;
+    [SerializeField] public const int BourgonEveryNbUnit = 4;
     private float distanceBeforeNextBourgeon;
-
-    
+    [SerializeField] private float startToMoveAfter = 0.2f;
+    private float lifeTime ;
 
     private void Start()
     {
@@ -57,10 +57,15 @@ public class Bout : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
 
         drawLine();
 
-        if (hasReachWater)
+        this.lifeTime += Time.deltaTime;
+        if (lifeTime > startToMoveAfter && !isMoving)
+            startToMove();
+
+        if (hasReachWater )
             return;
 
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());

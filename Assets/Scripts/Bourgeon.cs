@@ -12,7 +12,10 @@ public class Bourgeon : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        float modifTaille = Random.Range(0.1f, 0.18f);
+        this.transform.localScale = new Vector3(modifTaille,modifTaille,modifTaille);
         spriteRenderer = GetComponent<SpriteRenderer>();
+
     }    
 
     public void retract()
@@ -26,12 +29,14 @@ public class Bourgeon : MonoBehaviour
     {
         if(spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer>();
-
+        spriteRenderer.sortingOrder = 10;
         spriteRenderer.sprite = selectedSprite;
     }
 
     public void UnSelect()
     {
+        spriteRenderer.sortingOrder = 5;
+
         spriteRenderer.sprite = normalSprite;
     }
 
