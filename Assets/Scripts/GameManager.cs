@@ -146,13 +146,7 @@ public class GameManager : MonoBehaviour
     public void createBourgeon(Vector2 positionBourgeon, float yrotation = 0 )
     {
         GameObject newBourgeon = Instantiate(bourgeonPrefab, bourgeonContainer.transform);
-<<<<<<< HEAD
-        float yRotation = 0;
-        int random = UnityEngine.Random.Range(0, 10);
-        if (random > 5)
-=======
         if(yrotation == 0)
->>>>>>> main
         {
             int random = UnityEngine.Random.Range(0, 10);
             Debug.Log(random);
