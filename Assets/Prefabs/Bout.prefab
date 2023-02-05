@@ -26,9 +26,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1498223774740787056}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.041, y: -0.751, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 5438355102351489942}
   m_RootOrder: 0
@@ -75,7 +75,7 @@ SpriteMask:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
-  m_MaskAlphaCutoff: 0
+  m_MaskAlphaCutoff: 0.05
   m_FrontSortingLayerID: 0
   m_BackSortingLayerID: 0
   m_FrontSortingLayer: 0
@@ -297,7 +297,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.8072281
+        value: 0.7224808
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -306,7 +306,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0.2289182
+        value: 0.118641354
         inSlope: -0.5221626
         outSlope: -0.5221626
         tangentMode: 0

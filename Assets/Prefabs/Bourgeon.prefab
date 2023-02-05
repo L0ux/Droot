@@ -125,6 +125,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b11411fe2fc34d34b9b5018452caa3a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectedSprite: {fileID: 21300000, guid: 55475dc06e4fe41a3b9bf9b356a2d836, type: 3}
+  normalSprite: {fileID: 21300000, guid: ee62c250e03d64690bb1dee7aee35731, type: 3}
 --- !u!95 &143229603915500251
 Animator:
   serializedVersion: 4
