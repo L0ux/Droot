@@ -131,9 +131,6 @@ public class GameManager : MonoBehaviour
         myCameraSerre.Follow = currentBout.transform;
     }
     
-    
-
-
     private void OnClick()
     {
 
@@ -206,6 +203,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(dezoomCamera());
         myCameraLarge.Follow = startPoint.transform;
         panelDefaite.GetComponent<Animator>().SetTrigger("victory");
+  
     }
     public IEnumerator zoomCamera()
     {

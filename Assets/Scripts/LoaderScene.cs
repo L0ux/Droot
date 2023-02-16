@@ -7,7 +7,7 @@ public class LoaderScene : MonoBehaviour
 {
     public void Start()
     {
-        Debug.Log("azeazea");
+
     }
     public void loadNextLevel()
     {
